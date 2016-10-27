@@ -23,7 +23,7 @@ THE SOFTWARE.
 */
 
 import { Peripheral } from 'raspi-peripheral';
-import { SerialPort } from 'serialport';
+import SerialPort from 'serialport';
 
 export const PARITY_NONE = 'none';
 export const PARITY_EVEN = 'even';
