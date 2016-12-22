@@ -336,7 +336,7 @@ _Callback Arguments_:
   </thead>
   <tr>
     <td>data</td>
-    </td>Buffer</td>
+    <td>Buffer</td>
     <td>The data read from the serial port.</td>
   </tr>
 </table>
