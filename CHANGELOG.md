@@ -1,3 +1,7 @@
+## 3.0.1 (2016-12-21)
+
+- Added missing TypeScript definition package.json entry
+
 ## 3.0.0 (2016-12-21)
 
 - Converted the project to TypeScript and cleaned up a bunch of odds and ends
