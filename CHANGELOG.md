@@ -1,3 +1,9 @@
+## 3.0.0 (2016-12-21)
+
+- Converted the project to TypeScript and cleaned up a bunch of odds and ends
+- Updated the documentation, it was all kinds of wrong. My apologies.
+  - BREAKING CHANGE (depending on your definition of it): the old documentation has a number of innacuracies. Technically the code behaves the same as in v2.0.0, but it behaves differently than the old documentation.
+
 ## 2.0.0 (2016-10-27)
 
 - Upgraded serialport to version 4

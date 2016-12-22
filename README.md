@@ -77,6 +77,8 @@ raspi.init(function() {
 
 Instantiates a new Serial instance with the given options, defaulting to the built-in UART port. Check the [wiring information wiki](https://github.com/nebrius/raspi-io/wiki) for more information.
 
+Note: the port is _not_ automatically opened.
+
 _Arguments_:
 
 <table>
@@ -104,27 +106,27 @@ _Arguments_:
           </tr>
         </thead>
         <tr>
-          <td>port (optional)</td>
+          <td>portId (optional)</td>
           <td>String</td>
-          <td>The port to open, defaults to <code>/dev/ttyAMA0</code></td>
+          <td>The port to open, defaults to <code>'/dev/ttyAMA0'</code></td>
         </tr>
         <tr>
-          <td>baudRate</td>
+          <td>baudRate (optional)</td>
           <td>Number</td>
           <td>The baud rate, defaults to 9600</td>
         </tr>
         <tr>
-          <td>dataBits</td>
+          <td>dataBits (optional)</td>
           <td>Number</td>
           <td>The number of data bits in a character, defaults to 8</td>
         </tr>
         <tr>
-          <td>stopBits</td>
+          <td>stopBits (optional)</td>
           <td>Number</td>
           <td>The number of stop bits in a character, defaults to 1</td>
         </tr>
         <tr>
-          <td>parity</td>
+          <td>parity (optional)</td>
           <td>
             <code>PARITY_NONE</code> | <code>PARITY_EVEN</code> | <code>PARITY_ODD</code> | <code>PARITY_MARK</code> | <code>PARITY_SPACE</code>
           </td>
@@ -147,27 +149,98 @@ _Type_: String
 
 The baud rate tied to this instance
 
-_Type_: String
+_Type_: Number
 
 #### dataBits
 
 The number of data bits tied to this instance
 
-_Type_: String
+_Type_: Number
 
 #### stopBits
 
 The number of stop bits tied to this instance
 
-_Type_: String
+_Type_: Number
 
 #### parity
 
 The parity tied to this instance
 
-_Type_: String
+_Type_: One of `PARITY_NONE`, `PARITY_EVEN`, `PARITY_ODD`, `PARITY_MARK`, or `PARITY_SPACE`
 
 ### Instance Methods
+
+#### open(cb)
+
+Open the port.
+
+_Arguments_:
+
+<table>
+  <thead>
+    <tr>
+      <th>Argument</th>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tr>
+    <td>cb (optional)</td>
+    <td>Function</td>
+    <td>The callback to call once opening is complete</td>
+  </tr>
+  <tr>
+    <td></td>
+    <td colspan="2">
+      <em>No arguments</em>
+    </td>
+  </tr>
+</table>
+
+_Returns_: None
+
+#### close(cb)
+
+Close the port.
+
+_Arguments_:
+
+<table>
+  <thead>
+    <tr>
+      <th>Argument</th>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tr>
+    <td>cb (optional)</td>
+    <td>Function</td>
+    <td>The callback to call once closing is complete</td>
+  </tr>
+  <tr>
+    <td></td>
+    <td colspan="2">
+      <table>
+        <thead>
+          <tr>
+            <th>Argument</th>
+            <th>Type</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tr>
+          <td>err</td>
+          <td>String | null</td>
+          <td>The error, if one occurred, else null</td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+
+_Returns_: None
 
 #### write(data, cb)
 
@@ -196,20 +269,7 @@ _Arguments_:
   <tr>
     <td></td>
     <td colspan="2">
-      <table>
-        <thead>
-          <tr>
-            <th>Argument</th>
-            <th>Type</th>
-            <th>Description</th>
-          </tr>
-        </thead>
-        <tr>
-          <td>err</td>
-          <td>String | null</td>
-          <td>The error, if one occurred, else null</td>
-        </tr>
-      </table>
+      <em>No arguments</em>
     </td>
   </tr>
 </table>
