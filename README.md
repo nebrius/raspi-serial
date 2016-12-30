@@ -19,6 +19,8 @@ npm install raspi-serial
 
 **Warning**: this module requires GCC 4.8 or newer. This means that you should be running Raspbian Jessie or newer, released in September of 2015.
 
+_Note:_ You _must_ reboot your Raspberry Pi after installing Raspi Serial. Serial support is not enabled by default, and this module runs a script to enable it automatically and adjust a few serial settings. Notably, serial login is _disabled_ by this module. Be aware that having serial login enabled will cause conflicts when trying to read and write to it from Node. These settings will not take effect until you reboot your Pi.
+
 ## Example Usage
 
 ```JavaScript

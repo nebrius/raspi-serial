@@ -1,3 +1,8 @@
+## 3.0.2 (2016-12-30)
+
+- Added some important documentation to the README that needs to be on npmjs.com
+  - Note: there are no code changes, only documentation
+
 ## 3.0.1 (2016-12-21)
 
 - Added missing TypeScript definition package.json entry
