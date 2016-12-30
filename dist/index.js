@@ -110,10 +110,12 @@ var Serial = (function (_super) {
         var _this = this;
         this.validateAlive();
         if (this.isOpen) {
-            setImmediate(cb);
+            if (cb) {
+                setImmediate(cb);
+            }
             return;
         }
-        this.portInstance = new SerialPort(this.port, this.options);
+        this.portInstance = new SerialPort(this.portId, this.options);
         this.portInstance.on('open', function () {
             _this.portInstance.on('data', function (data) {
                 _this.emit('data', data);
@@ -127,7 +129,9 @@ var Serial = (function (_super) {
     Serial.prototype.close = function (cb) {
         this.validateAlive();
         if (!this.isOpen) {
-            setImmediate(cb);
+            if (cb) {
+                setImmediate(cb);
+            }
             return;
         }
         this.isOpen = false;

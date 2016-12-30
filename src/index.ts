@@ -114,7 +114,9 @@ export class Serial extends Peripheral {
   public open(cb?: ICallback): void {
     this.validateAlive();
     if (this.isOpen) {
-      setImmediate(cb);
+      if (cb) {
+        setImmediate(cb);
+      }
       return;
     }
     this.portInstance = new SerialPort(this.portId, this.options);
@@ -132,7 +134,9 @@ export class Serial extends Peripheral {
   public close(cb?: IErrorCallback): void {
     this.validateAlive();
     if (!this.isOpen) {
-      setImmediate(cb);
+      if (cb) {
+        setImmediate(cb);
+      }
       return;
     }
     this.isOpen = false;

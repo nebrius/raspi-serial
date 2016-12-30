@@ -1,3 +1,7 @@
+## 3.0.3 (2016-12-30)
+
+- Fixed a crash when a callback is not supplied to open or close
+
 ## 3.0.2 (2016-12-30)
 
 - Added some important documentation to the README that needs to be on npmjs.com
