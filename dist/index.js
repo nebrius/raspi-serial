@@ -66,6 +66,9 @@ var Serial = (function (_super) {
             stopBits: stopBits,
             parity: parity
         };
+        process.on('beforeExit', function () {
+            _this.destroy();
+        });
         return _this;
     }
     Object.defineProperty(Serial.prototype, "port", {
@@ -115,7 +118,13 @@ var Serial = (function (_super) {
             }
             return;
         }
-        this.portInstance = new SerialPort(this.portId, this.options);
+        this.portInstance = new SerialPort(this.portId, {
+            lock: false,
+            baudRate: this.options.baudRate,
+            dataBits: this.options.dataBits,
+            stopBits: this.options.stopBits,
+            parity: this.options.parity
+        });
         this.portInstance.on('open', function () {
             _this.portInstance.on('data', function (data) {
                 _this.emit('data', data);

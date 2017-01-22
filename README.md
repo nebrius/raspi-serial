@@ -24,14 +24,14 @@ npm install raspi-serial
 ## Example Usage
 
 ```JavaScript
-var raspi = require('raspi');
-var Serial = require('raspi-serial').Serial;
+const raspi = require('raspi');
+const Serial = require('raspi-serial').Serial;
 
-raspi.init(function() {
+raspi.init(() => {
   var serial = new Serial();
   serial.open(() => {
     serial.write('Hello from raspi-serial');
-    serial.on('data', function(data) {
+    serial.on('data', (data) => {
       process.stdout.write(data);
     });
   });

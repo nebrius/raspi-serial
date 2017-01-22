@@ -1,3 +1,7 @@
+## 3.0.4 (2017-1-22)
+
+- Added an explicit call to `this.destroy` in `process.on('beforeExit')`. This explicitly forces the serial port to close on exit.
+
 ## 3.0.3 (2016-12-30)
 
 - Fixed a crash when a callback is not supplied to open or close

@@ -85,6 +85,10 @@ export class Serial extends Peripheral {
       stopBits,
       parity
     };
+
+    process.on('beforeExit', () => {
+      this.destroy();
+    });
   }
 
   public get port(): string {
@@ -119,7 +123,13 @@ export class Serial extends Peripheral {
       }
       return;
     }
-    this.portInstance = new SerialPort(this.portId, this.options);
+    this.portInstance = new SerialPort(this.portId, {
+      lock: false,
+      baudRate: this.options.baudRate,
+      dataBits: this.options.dataBits,
+      stopBits: this.options.stopBits,
+      parity: this.options.parity
+    });
     this.portInstance.on('open', () => {
       this.portInstance.on('data', (data) => {
         this.emit('data', data);
