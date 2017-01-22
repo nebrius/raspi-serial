@@ -1,3 +1,7 @@
+## 3.0.5 (2017-22-1)
+
+- Publishing a new version to update the README on npmjs.com. No other changes.
+
 ## 3.0.4 (2017-1-22)
 
 - Added an explicit call to `this.destroy` in `process.on('beforeExit')`. This explicitly forces the serial port to close on exit.

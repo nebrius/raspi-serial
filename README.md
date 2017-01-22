@@ -17,9 +17,11 @@ Install with NPM:
 npm install raspi-serial
 ```
 
-**Warning**: this module requires GCC 4.8 or newer. This means that you should be running Raspbian Jessie or newer, released in September of 2015.
+**Warning**: this module indirectly requires GCC 4.8 or newer. This means that you should be running Raspbian Jessie or newer, released in September of 2015.
 
 **Note:** You _must_ reboot your Raspberry Pi after installing Raspi Serial. Serial support is not enabled by default, and this module runs a script to enable it automatically and adjust a few serial settings. Notably, serial login is _disabled_ by this module. Be aware that having serial login enabled will cause conflicts when trying to read and write to it from Node. These settings will not take effect until you reboot your Pi.
+
+**Note:** this project is written in [TypeScript](http://www.typescriptlang.org/) and includes type definitions in the package.json file. This means that if you want to use it from TypeScript, you don't need to install a separate @types module.
 
 ## Example Usage
 
@@ -79,7 +81,7 @@ raspi.init(() => {
 
 Instantiates a new Serial instance with the given options, defaulting to the built-in UART port. Check the [wiring information wiki](https://github.com/nebrius/raspi-io/wiki) for more information.
 
-Note: the port is _not_ automatically opened.
+**Note:** the port is _not_ automatically opened.
 
 _Arguments_:
 
