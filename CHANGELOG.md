@@ -1,4 +1,9 @@
-## 3.0.5 (2017-22-1)
+## 3.1.0 (2017-4-23)
+
+- Removed broken install script
+- Updated documentation to detail serial woes on the RPi
+
+## 3.0.5 (2017-1-22)
 
 - Publishing a new version to update the README on npmjs.com. No other changes.
 

@@ -22,11 +22,17 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 "use strict";
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
 var raspi_peripheral_1 = require("raspi-peripheral");
 var SerialPort = require("serialport");
 exports.PARITY_NONE = 'none';
@@ -53,7 +59,7 @@ var Serial = (function (_super) {
     __extends(Serial, _super);
     function Serial(_a) {
         var _b = _a === void 0 ? {} : _a, _c = _b.portId, portId = _c === void 0 ? exports.DEFAULT_PORT : _c, _d = _b.baudRate, baudRate = _d === void 0 ? 9600 : _d, _e = _b.dataBits, dataBits = _e === void 0 ? 8 : _e, _f = _b.stopBits, stopBits = _f === void 0 ? 1 : _f, _g = _b.parity, parity = _g === void 0 ? exports.PARITY_NONE : _g;
-        var _this;
+        var _this = this;
         var pins = [];
         if (portId === exports.DEFAULT_PORT) {
             pins.push('TXD0', 'RXD0');

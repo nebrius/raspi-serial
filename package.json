@@ -1,21 +1,20 @@
 {
   "name": "raspi-serial",
-  "version": "3.0.5",
+  "version": "3.1.0",
   "description": "Provides access to the serial port on the Raspberry Pi as part of the Raspi.js library suite",
   "main": "dist/index.js",
   "types": "./declarations/index.d.ts",
   "dependencies": {
-    "raspi-peripheral": "^1.6.0",
-    "serialport": "^4.0.3"
+    "raspi-peripheral": "^1.6.4",
+    "serialport": "^4.0.7"
   },
   "devDependencies": {
-    "@types/node": "0.0.2",
-    "@types/serialport": "^4.0.6",
-    "tslint": "^4.0.2",
-    "typescript": "^2.0.10"
+    "@types/node": "^7.0.13",
+    "@types/serialport": "4.0.6",
+    "tslint": "^5.1.0",
+    "typescript": "^2.2.2"
   },
   "scripts": {
-    "postinstall": "echo \"Disabling serial port login at boot time, you may be asked for your password\" && sudo env \"PATH=$PATH\" script/enable_serial.js",
     "prebuild": "tslint src/**/*.ts",
     "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"

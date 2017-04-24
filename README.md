@@ -17,13 +17,46 @@ Install with NPM:
 npm install raspi-serial
 ```
 
-**Warning**: this module indirectly requires GCC 4.8 or newer. This means that you should be running Raspbian Jessie or newer, released in September of 2015.
-
-**Note:** You _must_ reboot your Raspberry Pi after installing Raspi Serial. Serial support is not enabled by default, and this module runs a script to enable it automatically and adjust a few serial settings. Notably, serial login is _disabled_ by this module. Be aware that having serial login enabled will cause conflicts when trying to read and write to it from Node. These settings will not take effect until you reboot your Pi.
-
 **Note:** this project is written in [TypeScript](http://www.typescriptlang.org/) and includes type definitions in the package.json file. This means that if you want to use it from TypeScript, you don't need to install a separate @types module.
 
+**If you _are not_ running a Raspberry Pi without WiFi:**
+
+All older versions of the Raspberry Pi enable a TTY console over serial, meaning that you can use the `screen` command on *NIX computers to log in to the Raspberry Pi over serial. This can get in the way of using the serial port for robotics, however. To disable TTY over serial, do the following:
+
+1. Run `sudo raspi-config` to start the Raspberry Pi configuration utility
+1. Select `5 Interface Options`
+1. Select `P6 Serial Options`
+1. Select `No` when asked `Would you like a login shell to be accessible over serial?`
+1. Select `Yes` when asked `Would you like the serial port hardware to be enabled?`
+1. Select `OK`
+1. Select `Finish` and select `Yes` to reboot when prompted
+
+**WARNING: If you _are_ running a Raspberry Pi with WiFi:**
+
+The Bluetooth module on these Raspberry Pis is controlled using the serial port, meaning it cannot be used directly while also using Bluetooth. Using this module with the default serial port will _disable_ bluetooth!
+
+For an in-depth discussion on why and how to work around it, read https://raspberrypi.stackexchange.com/questions/45570/how-do-i-make-serial-work-on-the-raspberry-pi3.
+
 ## Example Usage
+
+In TypeScript/ES6:
+
+```TypeScript
+import { init } from 'raspi';
+import { Serial } from 'raspi-serial';
+
+init(() => {
+  var serial = new Serial();
+  serial.open(() => {
+    serial.write('Hello from raspi-serial');
+    serial.on('data', (data) => {
+      process.stdout.write(data);
+    });
+  });
+});
+```
+
+In JavaScript:
 
 ```JavaScript
 const raspi = require('raspi');
