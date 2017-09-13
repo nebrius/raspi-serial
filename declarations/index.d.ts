@@ -8,10 +8,10 @@ export declare const PARITY_SPACE = "space";
 export declare const DEFAULT_PORT = "/dev/ttyAMA0";
 export interface IOptions {
     portId?: string;
-    baudRate?: number;
-    dataBits?: number;
-    stopBits?: number;
-    parity?: string;
+    baudRate?: 115200 | 57600 | 38400 | 19200 | 9600 | 4800 | 2400 | 1800 | 1200 | 600 | 300 | 200 | 150 | 134 | 110 | 75 | 50 | number;
+    dataBits?: 8 | 7 | 6 | 5;
+    stopBits?: 1 | 2;
+    parity?: 'none' | 'even' | 'mark' | 'odd' | 'space';
 }
 export interface ICallback {
     (): void;
@@ -20,10 +20,10 @@ export interface IErrorCallback {
     (err: Error | string): void;
 }
 export declare class Serial extends Peripheral {
-    private portId;
-    private options;
-    private portInstance;
-    private isOpen;
+    private _portId;
+    private _options;
+    private _portInstance;
+    private _isOpen;
     constructor({portId, baudRate, dataBits, stopBits, parity}?: IOptions);
     readonly port: string;
     readonly baudRate: number;

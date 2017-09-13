@@ -1,7 +1,8 @@
+"use strict";
 /*
 The MIT License (MIT)
 
-Copyright (c) 2016 Bryan Hughes <bryan@nebri.us>
+Copyright (c) 2014-2017 Bryan Hughes <bryan@nebri.us>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -21,7 +22,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
-"use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -55,7 +55,7 @@ function createErrorCallback(cb) {
         }
     };
 }
-var Serial = (function (_super) {
+var Serial = /** @class */ (function (_super) {
     __extends(Serial, _super);
     function Serial(_a) {
         var _b = _a === void 0 ? {} : _a, _c = _b.portId, portId = _c === void 0 ? exports.DEFAULT_PORT : _c, _d = _b.baudRate, baudRate = _d === void 0 ? 9600 : _d, _e = _b.dataBits, dataBits = _e === void 0 ? 8 : _e, _f = _b.stopBits, stopBits = _f === void 0 ? 1 : _f, _g = _b.parity, parity = _g === void 0 ? exports.PARITY_NONE : _g;
@@ -65,8 +65,9 @@ var Serial = (function (_super) {
             pins.push('TXD0', 'RXD0');
         }
         _this = _super.call(this, pins) || this;
-        _this.portId = portId;
-        _this.options = {
+        _this._portId = portId;
+        _this._options = {
+            portId: portId,
             baudRate: baudRate,
             dataBits: dataBits,
             stopBits: stopBits,
@@ -79,35 +80,35 @@ var Serial = (function (_super) {
     }
     Object.defineProperty(Serial.prototype, "port", {
         get: function () {
-            return this.portId;
+            return this._portId;
         },
         enumerable: true,
         configurable: true
     });
     Object.defineProperty(Serial.prototype, "baudRate", {
         get: function () {
-            return this.options.baudRate;
+            return this._options.baudRate;
         },
         enumerable: true,
         configurable: true
     });
     Object.defineProperty(Serial.prototype, "dataBits", {
         get: function () {
-            return this.options.dataBits;
+            return this._options.dataBits;
         },
         enumerable: true,
         configurable: true
     });
     Object.defineProperty(Serial.prototype, "stopBits", {
         get: function () {
-            return this.options.stopBits;
+            return this._options.stopBits;
         },
         enumerable: true,
         configurable: true
     });
     Object.defineProperty(Serial.prototype, "parity", {
         get: function () {
-            return this.options.parity;
+            return this._options.parity;
         },
         enumerable: true,
         configurable: true
@@ -118,24 +119,24 @@ var Serial = (function (_super) {
     Serial.prototype.open = function (cb) {
         var _this = this;
         this.validateAlive();
-        if (this.isOpen) {
+        if (this._isOpen) {
             if (cb) {
                 setImmediate(cb);
             }
             return;
         }
-        this.portInstance = new SerialPort(this.portId, {
+        this._portInstance = new SerialPort(this._portId, {
             lock: false,
-            baudRate: this.options.baudRate,
-            dataBits: this.options.dataBits,
-            stopBits: this.options.stopBits,
-            parity: this.options.parity
+            baudRate: this._options.baudRate,
+            dataBits: this._options.dataBits,
+            stopBits: this._options.stopBits,
+            parity: this._options.parity
         });
-        this.portInstance.on('open', function () {
-            _this.portInstance.on('data', function (data) {
+        this._portInstance.on('open', function () {
+            _this._portInstance.on('data', function (data) {
                 _this.emit('data', data);
             });
-            _this.isOpen = true;
+            _this._isOpen = true;
             if (cb) {
                 cb();
             }
@@ -143,28 +144,28 @@ var Serial = (function (_super) {
     };
     Serial.prototype.close = function (cb) {
         this.validateAlive();
-        if (!this.isOpen) {
+        if (!this._isOpen) {
             if (cb) {
                 setImmediate(cb);
             }
             return;
         }
-        this.isOpen = false;
-        this.portInstance.close(createErrorCallback(cb));
+        this._isOpen = false;
+        this._portInstance.close(createErrorCallback(cb));
     };
     Serial.prototype.write = function (data, cb) {
         this.validateAlive();
-        if (!this.isOpen) {
+        if (!this._isOpen) {
             throw new Error('Attempted to write to a closed serial port');
         }
-        this.portInstance.write(data, createEmptyCallback(cb));
+        this._portInstance.write(data, createEmptyCallback(cb));
     };
     Serial.prototype.flush = function (cb) {
         this.validateAlive();
-        if (!this.isOpen) {
+        if (!this._isOpen) {
             throw new Error('Attempted to flush a closed serial port');
         }
-        this.portInstance.flush(createErrorCallback(cb));
+        this._portInstance.flush(createErrorCallback(cb));
     };
     return Serial;
 }(raspi_peripheral_1.Peripheral));

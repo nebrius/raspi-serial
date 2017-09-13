@@ -1,3 +1,15 @@
+## 4.0.0 (2017-9-12)
+
+- POTENTIALLY BREAKING CHANGE: renamed the following private properties to begin with an underscore because I just learned TypeScript doesn't do anything to hide private properties. Don't use these properties, changes may not be semver-major next time.
+    - `Serial.portId` -> `Serial._portId`
+    - `Serial.options` -> `Serial._options`
+    - `Serial.portInstance` -> `Serial._portInstance`
+    - `Serial.isOpen` -> `Serial._isOpen`
+- BREAKING CHANGE: dropped support for Node.js < 4.0.0, and now enforce it via package.json "engines" field.
+- BREAKING CHANGE: dropped support for attempting to install on non-arm platforms via package.json's "cpu" field.
+    - Attempting to install this on a non-Raspberry Pi platform before worked for this specific package, but not the rest of the Raspi.js suite
+    - If you need serial support on a non-Raspberry Pi platform, you should use [serialport](https://github.com/EmergingTechnologyAdvisors/node-serialport) instead.
+
 ## 3.1.0 (2017-4-23)
 
 - Removed broken install script

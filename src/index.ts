@@ -1,7 +1,7 @@
 /*
 The MIT License (MIT)
 
-Copyright (c) 2016 Bryan Hughes <bryan@nebri.us>
+Copyright (c) 2014-2017 Bryan Hughes <bryan@nebri.us>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -35,10 +35,18 @@ export const DEFAULT_PORT = '/dev/ttyAMA0';
 
 export interface IOptions {
   portId?: string;
-  baudRate?: number;
-  dataBits?: number;
-  stopBits?: number;
-  parity?: string;
+  baudRate?: 115200|57600|38400|19200|9600|4800|2400|1800|1200|600|300|200|150|134|110|75|50|number;
+  dataBits?: 8|7|6|5;
+  stopBits?: 1|2;
+  parity?: 'none'|'even'|'mark'|'odd'|'space';
+}
+
+interface IParsedOptions {
+  portId: string;
+  baudRate: 115200|57600|38400|19200|9600|4800|2400|1800|1200|600|300|200|150|134|110|75|50|number;
+  dataBits: 8|7|6|5;
+  stopBits: 1|2;
+  parity: 'none'|'even'|'mark'|'odd'|'space';
 }
 
 export interface ICallback {
@@ -67,10 +75,10 @@ function createErrorCallback(cb?: IErrorCallback): IErrorCallback {
 
 export class Serial extends Peripheral {
 
-  private portId: string;
-  private options: { baudRate: number, dataBits: number, stopBits: number, parity: string };
-  private portInstance: SerialPort;
-  private isOpen: boolean;
+  private _portId: string;
+  private _options: IParsedOptions;
+  private _portInstance: SerialPort;
+  private _isOpen: boolean;
 
   constructor({ portId = DEFAULT_PORT, baudRate = 9600, dataBits = 8, stopBits = 1, parity = PARITY_NONE }: IOptions = {}) {
     const pins = [];
@@ -78,8 +86,9 @@ export class Serial extends Peripheral {
       pins.push('TXD0', 'RXD0');
     }
     super(pins);
-    this.portId = portId;
-    this.options = {
+    this._portId = portId;
+    this._options = {
+      portId,
       baudRate,
       dataBits,
       stopBits,
@@ -92,23 +101,23 @@ export class Serial extends Peripheral {
   }
 
   public get port(): string {
-    return this.portId;
+    return this._portId;
   }
 
   public get baudRate(): number {
-    return this.options.baudRate;
+    return this._options.baudRate;
   }
 
   public get dataBits(): number {
-    return this.options.dataBits;
+    return this._options.dataBits;
   }
 
   public get stopBits(): number {
-    return this.options.stopBits;
+    return this._options.stopBits;
   }
 
   public get parity(): string {
-    return this.options.parity;
+    return this._options.parity;
   }
 
   public destroy(): void {
@@ -117,24 +126,24 @@ export class Serial extends Peripheral {
 
   public open(cb?: ICallback): void {
     this.validateAlive();
-    if (this.isOpen) {
+    if (this._isOpen) {
       if (cb) {
         setImmediate(cb);
       }
       return;
     }
-    this.portInstance = new SerialPort(this.portId, {
+    this._portInstance = new SerialPort(this._portId, {
       lock: false,
-      baudRate: this.options.baudRate,
-      dataBits: this.options.dataBits,
-      stopBits: this.options.stopBits,
-      parity: this.options.parity
+      baudRate: this._options.baudRate,
+      dataBits: this._options.dataBits,
+      stopBits: this._options.stopBits,
+      parity: this._options.parity
     });
-    this.portInstance.on('open', () => {
-      this.portInstance.on('data', (data) => {
+    this._portInstance.on('open', () => {
+      this._portInstance.on('data', (data) => {
         this.emit('data', data);
       });
-      this.isOpen = true;
+      this._isOpen = true;
       if (cb) {
         cb();
       }
@@ -143,30 +152,30 @@ export class Serial extends Peripheral {
 
   public close(cb?: IErrorCallback): void {
     this.validateAlive();
-    if (!this.isOpen) {
+    if (!this._isOpen) {
       if (cb) {
         setImmediate(cb);
       }
       return;
     }
-    this.isOpen = false;
-    this.portInstance.close(createErrorCallback(cb));
+    this._isOpen = false;
+    this._portInstance.close(createErrorCallback(cb));
   }
 
   public write(data: Buffer | string, cb?: ICallback): void {
     this.validateAlive();
-    if (!this.isOpen) {
+    if (!this._isOpen) {
       throw new Error('Attempted to write to a closed serial port');
     }
-    this.portInstance.write(data, createEmptyCallback(cb));
+    this._portInstance.write(data, createEmptyCallback(cb));
   }
 
   public flush(cb?: IErrorCallback): void {
     this.validateAlive();
-    if (!this.isOpen) {
+    if (!this._isOpen) {
       throw new Error('Attempted to flush a closed serial port');
     }
-    this.portInstance.flush(createErrorCallback(cb));
+    this._portInstance.flush(createErrorCallback(cb));
   }
 
 }
