@@ -9,7 +9,8 @@
     "serialport": "^5.0.0"
   },
   "devDependencies": {
-    "@types/node": "^8.0.28",
+    "@types/node": "^9.3.0",
+    "@types/raspi-peripheral": "^2.0.0",
     "@types/serialport": "^4.0.9",
     "tslint": "^5.7.0",
     "typescript": "^2.5.2"
