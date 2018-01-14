@@ -49,13 +49,9 @@ interface IParsedOptions {
   parity: 'none'|'even'|'mark'|'odd'|'space';
 }
 
-export interface ICallback {
-  (): void;
-}
+export type ICallback = () => void;
 
-export interface IErrorCallback {
-  (err: Error | string): void;
-}
+export type IErrorCallback = (err: Error | string) => void;
 
 function createEmptyCallback(cb?: ICallback): ICallback {
   return function() {
