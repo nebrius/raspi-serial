@@ -49,11 +49,11 @@ interface IParsedOptions {
   parity: 'none'|'even'|'mark'|'odd'|'space';
 }
 
-export type ICallback = () => void;
+export type Callback = () => void;
 
-export type IErrorCallback = (err: Error | string) => void;
+export type ErrorCallback = (err: Error | string) => void;
 
-function createEmptyCallback(cb?: ICallback): ICallback {
+function createEmptyCallback(cb?: Callback): Callback {
   return function() {
     if (cb) {
       cb();
@@ -61,7 +61,7 @@ function createEmptyCallback(cb?: ICallback): ICallback {
   };
 }
 
-function createErrorCallback(cb?: IErrorCallback): IErrorCallback {
+function createErrorCallback(cb?: ErrorCallback): ErrorCallback {
   return function(err: Error | string) {
     if (cb) {
       cb(err);
@@ -120,7 +120,7 @@ export class Serial extends Peripheral {
     this.close();
   }
 
-  public open(cb?: ICallback): void {
+  public open(cb?: Callback): void {
     this.validateAlive();
     if (this._isOpen) {
       if (cb) {
@@ -146,7 +146,7 @@ export class Serial extends Peripheral {
     });
   }
 
-  public close(cb?: IErrorCallback): void {
+  public close(cb?: ErrorCallback): void {
     this.validateAlive();
     if (!this._isOpen) {
       if (cb) {
@@ -158,7 +158,7 @@ export class Serial extends Peripheral {
     this._portInstance.close(createErrorCallback(cb));
   }
 
-  public write(data: Buffer | string, cb?: ICallback): void {
+  public write(data: Buffer | string, cb?: Callback): void {
     this.validateAlive();
     if (!this._isOpen) {
       throw new Error('Attempted to write to a closed serial port');
@@ -166,7 +166,7 @@ export class Serial extends Peripheral {
     this._portInstance.write(data, createEmptyCallback(cb));
   }
 
-  public flush(cb?: IErrorCallback): void {
+  public flush(cb?: ErrorCallback): void {
     this.validateAlive();
     if (!this._isOpen) {
       throw new Error('Attempted to flush a closed serial port');
