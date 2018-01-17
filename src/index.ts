@@ -54,7 +54,7 @@ export type Callback = () => void;
 export type ErrorCallback = (err: Error | string) => void;
 
 function createEmptyCallback(cb?: Callback): Callback {
-  return function() {
+  return () => {
     if (cb) {
       cb();
     }
@@ -62,7 +62,7 @@ function createEmptyCallback(cb?: Callback): Callback {
 }
 
 function createErrorCallback(cb?: ErrorCallback): ErrorCallback {
-  return function(err: Error | string) {
+  return (err: Error | string) => {
     if (cb) {
       cb(err);
     }
@@ -76,7 +76,13 @@ export class Serial extends Peripheral {
   private _portInstance: SerialPort;
   private _isOpen: boolean;
 
-  constructor({ portId = DEFAULT_PORT, baudRate = 9600, dataBits = 8, stopBits = 1, parity = PARITY_NONE }: IOptions = {}) {
+  constructor({
+    portId = DEFAULT_PORT,
+    baudRate = 9600,
+    dataBits = 8,
+    stopBits = 1,
+    parity = PARITY_NONE
+  }: IOptions = {}) {
     const pins = [];
     if (portId === DEFAULT_PORT) {
       pins.push('TXD0', 'RXD0');
