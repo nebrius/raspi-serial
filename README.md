@@ -69,7 +69,7 @@ init(() => {
 In JavaScript:
 
 ```JavaScript
-const raspi = require('raspi').init;
+const raspi = require('raspi');
 const Serial = require('raspi-serial').Serial;
 
 raspi.init(() => {
