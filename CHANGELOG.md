@@ -1,3 +1,8 @@
+## 5.1.0 (2018-12-9)
+
+- Updated TypeScript to v3. Note: the compiled output changed as I previously didn't set the compiled output target flag correctly.
+- Added `module` export to conform with Core IO types
+
 ## 5.0.0 (2018-4-21)
 
 - Updgraded to node-serialport 6

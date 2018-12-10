@@ -24,6 +24,7 @@ THE SOFTWARE.
 
 import { Peripheral } from 'raspi-peripheral';
 import * as SerialPort from 'serialport';
+import { ISerial, ISerialModule, ISerialOptions } from 'core-io-types';
 
 export const PARITY_NONE = 'none';
 export const PARITY_EVEN = 'even';
@@ -32,14 +33,6 @@ export const PARITY_MARK = 'mark';
 export const PARITY_SPACE = 'space';
 
 export const DEFAULT_PORT = '/dev/ttyAMA0';
-
-export interface IOptions {
-  portId?: string;
-  baudRate?: 115200|57600|38400|19200|9600|4800|2400|1800|1200|600|300|200|150|134|110|75|50|number;
-  dataBits?: 8|7|6|5;
-  stopBits?: 1|2;
-  parity?: 'none'|'even'|'mark'|'odd'|'space';
-}
 
 interface IParsedOptions {
   portId: string;
@@ -69,11 +62,11 @@ function createErrorCallback(cb?: ErrorCallback): ErrorCallback {
   };
 }
 
-export class Serial extends Peripheral {
+export class Serial extends Peripheral implements ISerial {
 
   private _portId: string;
   private _options: IParsedOptions;
-  private _portInstance: SerialPort;
+  private _portInstance: SerialPort | undefined;
   private _isOpen: boolean;
 
   constructor({
@@ -82,7 +75,7 @@ export class Serial extends Peripheral {
     dataBits = 8,
     stopBits = 1,
     parity = PARITY_NONE
-  }: IOptions = {}) {
+  }: ISerialOptions = {}) {
     const pins = [];
     if (portId === DEFAULT_PORT) {
       pins.push('TXD0', 'RXD0');
@@ -96,6 +89,7 @@ export class Serial extends Peripheral {
       stopBits,
       parity
     };
+    this._isOpen = false;
 
     process.on('beforeExit', () => {
       this.destroy();
@@ -142,6 +136,10 @@ export class Serial extends Peripheral {
       parity: this._options.parity
     });
     this._portInstance.on('open', () => {
+      if (!this._portInstance) {
+        throw new Error('Internal error: _portInstance undefined in "open" callback. ' +
+          'Please report this as a bug at https://github.com/nebrius/raspi-serial/issues.');
+      }
       this._portInstance.on('data', (data) => {
         this.emit('data', data);
       });
@@ -161,6 +159,10 @@ export class Serial extends Peripheral {
       return;
     }
     this._isOpen = false;
+    if (!this._portInstance) {
+      throw new Error('Internal error: _portInstance undefined in "open" callback. ' +
+        'Please report this as a bug at https://github.com/nebrius/raspi-serial/issues.');
+    }
     this._portInstance.close(createErrorCallback(cb));
   }
 
@@ -168,6 +170,10 @@ export class Serial extends Peripheral {
     this.validateAlive();
     if (!this._isOpen) {
       throw new Error('Attempted to write to a closed serial port');
+    }
+    if (!this._portInstance) {
+      throw new Error('Internal error: _portInstance undefined in "open" callback. ' +
+        'Please report this as a bug at https://github.com/nebrius/raspi-serial/issues.');
     }
     this._portInstance.write(data, createEmptyCallback(cb));
   }
@@ -177,7 +183,17 @@ export class Serial extends Peripheral {
     if (!this._isOpen) {
       throw new Error('Attempted to flush a closed serial port');
     }
+    if (!this._portInstance) {
+      throw new Error('Internal error: _portInstance undefined in "open" callback. ' +
+        'Please report this as a bug at https://github.com/nebrius/raspi-serial/issues.');
+    }
     this._portInstance.flush(createErrorCallback(cb));
   }
 
 }
+
+export const module: ISerialModule = {
+  createSerial(options?: ISerialOptions) {
+    return new Serial(options);
+  }
+};

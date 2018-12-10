@@ -22,19 +22,9 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
 Object.defineProperty(exports, "__esModule", { value: true });
-var raspi_peripheral_1 = require("raspi-peripheral");
-var SerialPort = require("serialport");
+const raspi_peripheral_1 = require("raspi-peripheral");
+const SerialPort = require("serialport");
 exports.PARITY_NONE = 'none';
 exports.PARITY_EVEN = 'even';
 exports.PARITY_ODD = 'odd';
@@ -42,82 +32,58 @@ exports.PARITY_MARK = 'mark';
 exports.PARITY_SPACE = 'space';
 exports.DEFAULT_PORT = '/dev/ttyAMA0';
 function createEmptyCallback(cb) {
-    return function () {
+    return () => {
         if (cb) {
             cb();
         }
     };
 }
 function createErrorCallback(cb) {
-    return function (err) {
+    return (err) => {
         if (cb) {
             cb(err);
         }
     };
 }
-var Serial = /** @class */ (function (_super) {
-    __extends(Serial, _super);
-    function Serial(_a) {
-        var _b = _a === void 0 ? {} : _a, _c = _b.portId, portId = _c === void 0 ? exports.DEFAULT_PORT : _c, _d = _b.baudRate, baudRate = _d === void 0 ? 9600 : _d, _e = _b.dataBits, dataBits = _e === void 0 ? 8 : _e, _f = _b.stopBits, stopBits = _f === void 0 ? 1 : _f, _g = _b.parity, parity = _g === void 0 ? exports.PARITY_NONE : _g;
-        var _this = this;
-        var pins = [];
+class Serial extends raspi_peripheral_1.Peripheral {
+    constructor({ portId = exports.DEFAULT_PORT, baudRate = 9600, dataBits = 8, stopBits = 1, parity = exports.PARITY_NONE } = {}) {
+        const pins = [];
         if (portId === exports.DEFAULT_PORT) {
             pins.push('TXD0', 'RXD0');
         }
-        _this = _super.call(this, pins) || this;
-        _this._portId = portId;
-        _this._options = {
-            portId: portId,
-            baudRate: baudRate,
-            dataBits: dataBits,
-            stopBits: stopBits,
-            parity: parity
+        super(pins);
+        this._portId = portId;
+        this._options = {
+            portId,
+            baudRate,
+            dataBits,
+            stopBits,
+            parity
         };
-        process.on('beforeExit', function () {
-            _this.destroy();
+        this._isOpen = false;
+        process.on('beforeExit', () => {
+            this.destroy();
         });
-        return _this;
     }
-    Object.defineProperty(Serial.prototype, "port", {
-        get: function () {
-            return this._portId;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Serial.prototype, "baudRate", {
-        get: function () {
-            return this._options.baudRate;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Serial.prototype, "dataBits", {
-        get: function () {
-            return this._options.dataBits;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Serial.prototype, "stopBits", {
-        get: function () {
-            return this._options.stopBits;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Serial.prototype, "parity", {
-        get: function () {
-            return this._options.parity;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Serial.prototype.destroy = function () {
+    get port() {
+        return this._portId;
+    }
+    get baudRate() {
+        return this._options.baudRate;
+    }
+    get dataBits() {
+        return this._options.dataBits;
+    }
+    get stopBits() {
+        return this._options.stopBits;
+    }
+    get parity() {
+        return this._options.parity;
+    }
+    destroy() {
         this.close();
-    };
-    Serial.prototype.open = function (cb) {
-        var _this = this;
+    }
+    open(cb) {
         this.validateAlive();
         if (this._isOpen) {
             if (cb) {
@@ -132,17 +98,21 @@ var Serial = /** @class */ (function (_super) {
             stopBits: this._options.stopBits,
             parity: this._options.parity
         });
-        this._portInstance.on('open', function () {
-            _this._portInstance.on('data', function (data) {
-                _this.emit('data', data);
+        this._portInstance.on('open', () => {
+            if (!this._portInstance) {
+                throw new Error('Internal error: _portInstance undefined in "open" callback. ' +
+                    'Please report this as a bug at https://github.com/nebrius/raspi-serial/issues.');
+            }
+            this._portInstance.on('data', (data) => {
+                this.emit('data', data);
             });
-            _this._isOpen = true;
+            this._isOpen = true;
             if (cb) {
                 cb();
             }
         });
-    };
-    Serial.prototype.close = function (cb) {
+    }
+    close(cb) {
         this.validateAlive();
         if (!this._isOpen) {
             if (cb) {
@@ -151,23 +121,39 @@ var Serial = /** @class */ (function (_super) {
             return;
         }
         this._isOpen = false;
+        if (!this._portInstance) {
+            throw new Error('Internal error: _portInstance undefined in "open" callback. ' +
+                'Please report this as a bug at https://github.com/nebrius/raspi-serial/issues.');
+        }
         this._portInstance.close(createErrorCallback(cb));
-    };
-    Serial.prototype.write = function (data, cb) {
+    }
+    write(data, cb) {
         this.validateAlive();
         if (!this._isOpen) {
             throw new Error('Attempted to write to a closed serial port');
         }
+        if (!this._portInstance) {
+            throw new Error('Internal error: _portInstance undefined in "open" callback. ' +
+                'Please report this as a bug at https://github.com/nebrius/raspi-serial/issues.');
+        }
         this._portInstance.write(data, createEmptyCallback(cb));
-    };
-    Serial.prototype.flush = function (cb) {
+    }
+    flush(cb) {
         this.validateAlive();
         if (!this._isOpen) {
             throw new Error('Attempted to flush a closed serial port');
         }
+        if (!this._portInstance) {
+            throw new Error('Internal error: _portInstance undefined in "open" callback. ' +
+                'Please report this as a bug at https://github.com/nebrius/raspi-serial/issues.');
+        }
         this._portInstance.flush(createErrorCallback(cb));
-    };
-    return Serial;
-}(raspi_peripheral_1.Peripheral));
+    }
+}
 exports.Serial = Serial;
+exports.module = {
+    createSerial(options) {
+        return new Serial(options);
+    }
+};
 //# sourceMappingURL=index.js.map

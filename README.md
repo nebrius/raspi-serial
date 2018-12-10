@@ -58,10 +58,10 @@ import { Serial } from 'raspi-serial';
 init(() => {
   var serial = new Serial();
   serial.open(() => {
-    serial.write('Hello from raspi-serial');
     serial.on('data', (data) => {
       process.stdout.write(data);
     });
+    serial.write('Hello from raspi-serial');
   });
 });
 ```
@@ -75,10 +75,10 @@ const Serial = require('raspi-serial').Serial;
 raspi.init(() => {
   var serial = new Serial();
   serial.open(() => {
-    serial.write('Hello from raspi-serial');
     serial.on('data', (data) => {
       process.stdout.write(data);
     });
+    serial.write('Hello from raspi-serial');
   });
 });
 ```
@@ -117,6 +117,27 @@ raspi.init(() => {
   <tr>
     <td>PARITY_SPACE</td>
     <td>Use space parity, one of five possible values for the <code>parity</code> property in the constructor options</td>
+  </tr>
+  <tr>
+    <td>module</td>
+    <td>An easily consumable object for indirectly passing this module around. Intended specifically for use by Core IO (details coming soon)</td>
+  </tr>
+  <tr>
+    <td></td>
+    <td><table>
+      <thead>
+        <tr>
+          <th>Property</th>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tr>
+        <td>createSerial(options)</td>
+        <tr>Function</tr>
+        <td>Pass through for the <a href="#new-serialoptions">Serial constructor</a></td>
+      </tr>
+    </table></td>
   </tr>
 </table>
 
