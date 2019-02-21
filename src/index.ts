@@ -24,7 +24,7 @@ THE SOFTWARE.
 
 import { Peripheral } from 'raspi-peripheral';
 import * as SerialPort from 'serialport';
-import { ISerial, ISerialModule, ISerialOptions } from 'core-io-types';
+import { ISerial, ISerialModule, ISerialOptions } from 'j5-io-types';
 
 export const PARITY_NONE = 'none';
 export const PARITY_EVEN = 'even';

@@ -1,6 +1,6 @@
 /// <reference types="node" />
 import { Peripheral } from 'raspi-peripheral';
-import { ISerial, ISerialModule, ISerialOptions } from 'core-io-types';
+import { ISerial, ISerialModule, ISerialOptions } from 'j5-io-types';
 export declare const PARITY_NONE = "none";
 export declare const PARITY_EVEN = "even";
 export declare const PARITY_ODD = "odd";
