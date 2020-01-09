@@ -15,11 +15,11 @@ export declare class Serial extends Peripheral implements ISerial {
     private _portInstance;
     private _isOpen;
     constructor({ portId, baudRate, dataBits, stopBits, parity }?: ISerialOptions);
-    readonly port: string;
-    readonly baudRate: number;
-    readonly dataBits: number;
-    readonly stopBits: number;
-    readonly parity: string;
+    get port(): string;
+    get baudRate(): number;
+    get dataBits(): number;
+    get stopBits(): number;
+    get parity(): string;
     destroy(): void;
     open(cb?: Callback): void;
     close(cb?: ErrorCallback): void;

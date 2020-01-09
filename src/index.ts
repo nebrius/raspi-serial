@@ -163,7 +163,7 @@ export class Serial extends Peripheral implements ISerial {
       throw new Error('Internal error: _portInstance undefined in "open" callback. ' +
         'Please report this as a bug at https://github.com/nebrius/raspi-serial/issues.');
     }
-    this._portInstance.close(createErrorCallback(cb));
+    this._portInstance.close(createErrorCallback(cb) as any);
   }
 
   public write(data: Buffer | string, cb?: Callback): void {
@@ -187,7 +187,7 @@ export class Serial extends Peripheral implements ISerial {
       throw new Error('Internal error: _portInstance undefined in "open" callback. ' +
         'Please report this as a bug at https://github.com/nebrius/raspi-serial/issues.');
     }
-    this._portInstance.flush(createErrorCallback(cb));
+    this._portInstance.flush(createErrorCallback(cb) as any);
   }
 
 }

@@ -1,3 +1,8 @@
+## 6.0.0 (2020-1-09)
+
+- Updated dependencies
+- BREAKING CHANGE: dropped support for end-of-lifed versions of Node.js, so this now only supports Node 10, 12, and 13
+
 ## 5.1.2 (2019-10-5)
 
 - Added `arm64` to the `cpu` field in package.json for installing on 64-bit Raspberry Pis
